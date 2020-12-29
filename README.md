@@ -19,7 +19,7 @@ The following are papers that I'll cover in this repo.
 *Shaosheng Cao, Wei Lu, and Qiongkai Xu.*
    CIKM 2015.
   
-- **Asymmetric Transitivity Preserving Graph Embedding**
+- **Asymmetric Transitivity Preserving Graph Embedding.**
 *Mingdong Ou, Peng Cui, Jian Pei, Ziwei Zhang, and Wenwu Zhu.*
   KDD 2016.
 ### 3.1.2 Random Walk-Based Models
