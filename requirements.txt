@@ -1,3 +1,7 @@
 torch==1.7.0
 torch_geometric==1.6.3
 ogb==1.2.3
+scipy==1.5.2
+scikit-multilearn==0.2.0
+scikit-learn==0.23.2
+pathlib2==2.3.5
