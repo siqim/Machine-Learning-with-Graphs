@@ -32,7 +32,6 @@ class Dataset(object):
         self.metric = None
         self.name = name
 
-
         if name == 'ogb':
             self.setup_ogb()
         elif name == 'wiki':

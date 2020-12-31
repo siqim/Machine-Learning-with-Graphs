@@ -92,12 +92,12 @@ def test(model, H, data):
 
 
 def main():
-    dataset = 'ogb'
+    dataset = 'wiki'  # 'wiki' or 'ogb'
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     device = torch.device(device)
 
     embedding_dim = 256
-    lr = 0.01
+    lr = 0.1  # 0.1 for wiki and 0.01 for ogb
     epochs = 200
     log_steps = 1
     batch_size = 1024 * 1024
@@ -110,15 +110,17 @@ def main():
                0 if data.x is None else data.x.shape[1]).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
+    # 1. train the embedding with negative sampling
     for iters in range(100):
         loss = train_emb(model, edge_index, data, optimizer, batch_size, device)
         if iters % log_steps == 0:
             print("Iters: {iters}, Loss: {loss:.4f}".format(iters=iters, loss=loss))
 
+    # 2. train a classifier for the node classification task
     H = model.emb.weight
     H.requires_grad = False
     if data.x is not None:
-        H = torch.cat([data.x.to(device), H], dim=1)
+        H = torch.cat([data.x.to(device), H], dim=1)  # if there are node features, add them
     data.y = data.y.to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 

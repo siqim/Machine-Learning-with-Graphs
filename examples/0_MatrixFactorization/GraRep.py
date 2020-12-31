@@ -33,7 +33,7 @@ class GraRep(nn.Module):
         )
 
     def construct_Ak(self, adj):
-
+        # add a small number in case it has zeros
         deg_inv = 1 / (torch_sparse.sum(adj, dim=1).view(-1, 1) + 1e-15)
         A_tilde = torch_sparse.mul(adj, deg_inv)
 
@@ -50,6 +50,7 @@ class GraRep(nn.Module):
             print('solving SVD with k={k}'.format(k=k))
             tau_k = Ak.sum(dim=0).view(1, -1)
             Xk = torch_sparse.mul(Ak, self.num_embeddings / (tau_k * lamb))
+            # add a small number in case it has zeros
             temp = torch.log(Xk.storage.value() + 1e-15)
             temp[temp < 0] = 0
             Xk.storage._value = temp
@@ -102,11 +103,14 @@ def main():
 
     model = GraRep(data.num_nodes, embedding_dim, data.num_classes, k,
                    0 if data.x is None else data.x.shape[1]).to(device)
+    # 1. construct A^k
     A = model.construct_Ak(data.adj_t)
+    # 2. optimize the problem with truncated SVD
     H = model.solve_with_SVD(A).to(device)
 
+    # 3. use the learned representations to train a classifier for the node classification task
     if data.x is not None:
-        H = torch.cat([data.x.to(device), H], dim=1)
+        H = torch.cat([data.x.to(device), H], dim=1)  # if there are node features, add them
     data.y = data.y.to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 

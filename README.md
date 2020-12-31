@@ -6,6 +6,8 @@ I use basic packages from Anaconda3 with Python 3.8.5. To make my life easier, I
 ```
 torch==1.7.0
 torch_geometric==1.6.3
+ogb==1.2.3
+scikit-multilearn==0.2.0
 ```
 # 3. Papers
 The following are papers that I'll cover in this repo. 
