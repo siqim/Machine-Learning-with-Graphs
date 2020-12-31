@@ -1,5 +1,7 @@
 *.tex.md
 RegMd.py
+ogbn_arxiv/
+.idea/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -15,8 +17,6 @@ build/
 develop-eggs/
 dist/
 downloads/
-dataset/
-.idea/
 eggs/
 .eggs/
 lib/
