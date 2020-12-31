@@ -6,9 +6,12 @@ Created on December 29, 2020
 @author: Siqi Miao
 """
 
+import sys
+sys.path.append("../")
+
 from pathlib2 import Path
 from scipy.sparse.linalg import svds
-from examples.dataset import Dataset
+from dataset import Dataset
 
 import torch
 import torch.nn as nn
