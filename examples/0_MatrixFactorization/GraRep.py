@@ -7,6 +7,7 @@ Created on December 29, 2020
 """
 
 import sys
+
 sys.path.append("../")
 
 from pathlib2 import Path
@@ -48,10 +49,18 @@ class GraRep(nn.Module):
 
     def solve_with_SVD(self, A, lamb=1):
 
-        H = []
+        W = []
         for k, Ak in enumerate(A, 1):
             print('solving SVD with k={k}'.format(k=k))
             tau_k = Ak.sum(dim=0).view(1, -1)
+
+            # remove the conditional probability term in the objective function
+            # to make it a pure negative sampling model
+            # temp = Ak.storage.value()
+            # temp[temp > 0] = 1
+            # temp[temp <= 0] = 0
+            # Ak.storage._value = temp
+
             Xk = torch_sparse.mul(Ak, self.num_embeddings / (tau_k * lamb))
             # add a small number in case it has zeros
             temp = torch.log(Xk.storage.value() + 1e-15)
@@ -60,21 +69,21 @@ class GraRep(nn.Module):
 
             Xk = Xk.to_scipy('coo')
             u, s, vt = svds(Xk, k=self.embedding_dim)  # torch.svd_lowrank does not work due to a bug
-            Hk = torch.tensor(u * s ** 0.5)
-            H.append(Hk)
+            Wk = torch.tensor(u * s ** 0.5)
+            W.append(Wk)
 
-        return torch.cat(H, dim=1)
+        return torch.cat(W, dim=1)
 
-    def forward(self, h):
-        return self.fc(h)
+    def forward(self, w):
+        return self.fc(w)
 
 
-def train(model, H, data, optimizer):
+def train(model, W, data, optimizer):
     model.train()
     train_idx = data.split_idx['train']
 
     model.zero_grad()
-    outputs = model(H)[train_idx]
+    outputs = model(W)[train_idx]
 
     loss = data.criterion(outputs, data.y.squeeze(1)[train_idx])
     loss.backward()
@@ -84,21 +93,21 @@ def train(model, H, data, optimizer):
 
 
 @torch.no_grad()
-def test(model, H, data):
+def test(model, W, data):
     model.eval()
-    logits = model(H)
+    logits = model(W)
 
     return data.eval(data.y.cpu(), logits.cpu(), data.split_idx)
 
 
 def main():
-    dataset = 'ogb'
+    dataset = 'wiki'
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     device = torch.device(device)
 
     k = 2
     embedding_dim = int(256 / k)
-    epochs = 500
+    epochs = 200
     log_steps = 5
     lr = 0.01
 
@@ -109,18 +118,18 @@ def main():
     # 1. construct A^k
     A = model.construct_Ak(data.adj_t)
     # 2. optimize the problem with truncated SVD
-    H = model.solve_with_SVD(A).to(device)
+    W = model.solve_with_SVD(A).to(device)
 
     # 3. use the learned representations to train a classifier for the node classification task
     if data.x is not None:
-        H = torch.cat([data.x.to(device), H], dim=1)  # if there are node features, add them
+        W = torch.cat([data.x.to(device), W], dim=1)  # if there are node features, add them
     data.y = data.y.to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
 
     test_scores = []
     for epoch in range(1, 1 + epochs):
-        loss = train(model, H, data, optimizer)
-        result = test(model, H, data)
+        loss = train(model, W, data, optimizer)
+        result = test(model, W, data)
 
         if epoch % log_steps == 0:
             train_res, valid_res, test_res = result
