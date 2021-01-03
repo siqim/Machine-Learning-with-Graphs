@@ -1,4 +1,5 @@
 *.tex.md
+*.tex.ipynb
 RegMd.py
 ogbn_arxiv/
 .idea/

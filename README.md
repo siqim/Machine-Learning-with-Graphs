@@ -1,7 +1,7 @@
 # 1. Introduction
 This repo summarizes papers I've read for machine learning on graphs.
 
-# 2. Requirement
+# 2. Requirements
 I use basic packages from Anaconda3 with Python 3.8.5. To make my life easier, I also use the following packages to implement models:
 ```
 torch==1.7.0
@@ -25,6 +25,7 @@ The following are papers that I'll cover in this repo.
 *Mingdong Ou, Peng Cui, Jian Pei, Ziwei Zhang, and Wenwu Zhu.*
   KDD 2016.
 ### 3.1.2 Random Walk-Based Models
+### 3.1.3 GCN-based Models
 
 ## 3.2 Scalability and Expressivity
 ### 3.2.1 Node Sampling

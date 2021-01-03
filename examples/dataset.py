@@ -103,4 +103,4 @@ class Dataset(object):
 
 
 if __name__ == '__main__':
-    data = Dataset(root=Path('../dataset'), name='ogb')
+    data = Dataset(root=Path('../dataset'), name='wiki')
