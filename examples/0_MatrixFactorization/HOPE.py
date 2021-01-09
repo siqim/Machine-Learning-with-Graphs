@@ -97,7 +97,7 @@ def test(model, W, data):
 
 
 def main():
-    dataset = 'ogb'
+    dataset = 'wiki'
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
     device = torch.device(device)
 

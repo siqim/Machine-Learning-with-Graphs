@@ -18,9 +18,12 @@ from ogb.nodeproppred import PygNodePropPredDataset, Evaluator
 
 
 class Dataset(object):
-    def __init__(self, root, name):
+    def __init__(self, root, name, make_edge_index=False):
 
         self.root = root
+        self.name = name
+        self.make_edge_index = make_edge_index
+
         self.num_classes = None
         self.split_idx = None
         self.x = None
@@ -30,7 +33,6 @@ class Dataset(object):
         self.num_nodes = None
         self.criterion = None
         self.metric = None
-        self.name = name
 
         if name == 'ogb':
             self.setup_ogb()
@@ -51,8 +53,12 @@ class Dataset(object):
         self.x = data.x
         self.y = data.y
         self.adj_t = data.adj_t.to_symmetric()
-        self.edge_index = data.edge_index
         self.num_nodes = data.num_nodes
+
+        if self.make_edge_index:
+            row = self.adj_t.storage.row()
+            col = self.adj_t.storage.col()
+            self.edge_index = torch.stack((row, col), dim=0)
 
         self.criterion = torch.nn.CrossEntropyLoss()
 
@@ -67,6 +73,11 @@ class Dataset(object):
         adj_t = mat['network'].tocoo()
         self.adj_t = SparseTensor(row=torch.LongTensor(adj_t.row), col=torch.LongTensor(adj_t.col),
                                   sparse_sizes=(self.num_nodes, self.num_nodes))
+
+        if self.make_edge_index:
+            row = self.adj_t.storage.row()
+            col = self.adj_t.storage.col()
+            self.edge_index = torch.stack((row, col), dim=0)
 
         self.y = torch.from_numpy(mat['group'].todense()).float()
         X = torch.arange(self.y.shape[0]).view(-1, 1)
@@ -103,4 +114,4 @@ class Dataset(object):
 
 
 if __name__ == '__main__':
-    data = Dataset(root=Path('../dataset'), name='wiki')
+    data = Dataset(root=Path('../dataset'), name='ogb')

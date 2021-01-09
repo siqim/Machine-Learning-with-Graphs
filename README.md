@@ -2,7 +2,7 @@
 This repo summarizes papers I've read for machine learning on graphs.
 
 # 2. Requirements
-I use basic packages from Anaconda3 with Python 3.8.5. To make my life easier, I also use the following packages to implement models:
+I use basic packages from Anaconda3 with Python 3.8.5. To make my life easier, I also use the following packages to implement models. Please see `requirements.txt` for the full list.
 ```
 torch==1.7.0
 torch_geometric==1.6.3
@@ -13,7 +13,7 @@ scikit-multilearn==0.2.0
 The following are papers that I'll cover in this repo. 
 ## 3.1 Early Research
 ### 3.1.1 Factorization-Based Models
-- **Distributed Large-scale Natural Graph Factorization.**
+- **Distributed large-scale natural graph factorization.**
 *Amr Ahmed, Nino Shervashidze, Shravan Narayanamurthy, Vanja Josifovski, and Alexander J Smola.*
    WWW 2013.
    
@@ -21,10 +21,23 @@ The following are papers that I'll cover in this repo.
 *Shaosheng Cao, Wei Lu, and Qiongkai Xu.*
    CIKM 2015.
   
-- **Asymmetric Transitivity Preserving Graph Embedding.**
+- **Asymmetric transitivity preserving graph embedding.**
 *Mingdong Ou, Peng Cui, Jian Pei, Ziwei Zhang, and Wenwu Zhu.*
   KDD 2016.
+
 ### 3.1.2 Random Walk-Based Models
+- **Deepwalk: Online learning of social representations.**
+*Bryan Perozzi, Rami Al-Rfou, and Steven Skiena.*
+   KDD 2014.
+
+- **node2vec: Scalable feature learning for networks.**
+*Aditya Grover and Jure Leskovec.*
+   KDD 2014.
+  
+- **struc2vec: Learning node representations from structural identity.**
+*Leonardo FR Ribeiro, Pedro HP Saverese, and Daniel R Figueiredo.*
+   KDD 2017.
+
 ### 3.1.3 GCN-based Models
 
 ## 3.2 Scalability and Expressivity
