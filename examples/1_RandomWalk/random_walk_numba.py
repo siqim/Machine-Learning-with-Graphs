@@ -62,7 +62,11 @@ def is_neighbor(rowptr, col, a, b):
 def sample_neighbors_uniformly(rowptr, col, a):
     # O(1)
     neighbs = get_neighbors(rowptr, col, a)
-    return np.random.choice(neighbs)
+
+    if neighbs.shape[0] == 0:
+        return a
+    else:
+        return np.random.choice(neighbs)
 
 
 @njit(nogil=True)
