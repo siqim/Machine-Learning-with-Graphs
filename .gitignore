@@ -3,6 +3,8 @@
 RegMd.py
 ogbn_arxiv/
 .idea/
+FashionMNIST/
+MNIST/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -8,3 +8,4 @@ pathlib2==2.3.5
 numpy==1.19.2
 numba==0.51.2
 tqdm==4.50.2
+torchvision==0.8.1
