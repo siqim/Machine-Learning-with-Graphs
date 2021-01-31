@@ -49,17 +49,17 @@ class VAE(nn.Module):
         return mu, log_var
 
     def decoder(self, z):
-        X_tilde = self.decoder_forward(z)
-        return X_tilde
+        mu_prime = self.decoder_forward(z)
+        return mu_prime
 
     def reparameterization(self, mu, log_var):
         epsilon = torch.randn_like(log_var)
         z = mu + epsilon * torch.sqrt(log_var.exp())
         return z
 
-    def loss(self, X, X_tilde, mu, log_var):
-        # reconstruction_loss = F.mse_loss(X_tilde, X, reduction='mean') is wrong!
-        reconstruction_loss = torch.mean(torch.square(X - X_tilde).sum(dim=1))
+    def loss(self, X, mu_prime, mu, log_var):
+        # reconstruction_loss = F.mse_loss(mu_prime, X, reduction='mean') is wrong!
+        reconstruction_loss = torch.mean(torch.square(X - mu_prime).sum(dim=1))
 
         latent_loss = torch.mean(0.5 * (log_var.exp() + torch.square(mu) - log_var).sum(dim=1))
         return reconstruction_loss + latent_loss
@@ -67,8 +67,8 @@ class VAE(nn.Module):
     def forward(self, X, *args, **kwargs):
         mu, log_var = self.encoder(X)
         z = self.reparameterization(mu, log_var)
-        X_tilde = self.decoder(z)
-        return X_tilde, mu, log_var
+        mu_prime = self.decoder(z)
+        return mu_prime, mu, log_var
 
 
 class CVAE(VAE):
@@ -84,8 +84,8 @@ class CVAE(VAE):
         z = self.reparameterization(mu, log_var)
         z_given_Y = torch.cat((z, y.unsqueeze(1)), dim=1)
 
-        X_tilde_given_Y = self.decoder(z_given_Y)
-        return X_tilde_given_Y, mu, log_var
+        mu_prime_given_Y = self.decoder(z_given_Y)
+        return mu_prime_given_Y, mu, log_var
 
 
 def train(model, optimizer, data_loader, device, name='VAE'):
@@ -99,11 +99,11 @@ def train(model, optimizer, data_loader, device, name='VAE'):
         model.zero_grad()
 
         if name == 'VAE':
-            X_tilde, mu, log_var = model(X)
+            mu_prime, mu, log_var = model(X)
         else:
-            X_tilde, mu, log_var = model(X, y)
+            mu_prime, mu, log_var = model(X, y)
 
-        loss = model.loss(X.view(batch_size, -1), X_tilde, mu, log_var)
+        loss = model.loss(X.view(batch_size, -1), mu_prime, mu, log_var)
         loss.backward()
         optimizer.step()
 
