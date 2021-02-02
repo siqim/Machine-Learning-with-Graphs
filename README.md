@@ -1,5 +1,5 @@
 # 1. Introduction
-This repo summarizes papers I've read for machine learning on graphs.
+This repo summarizes papers I've read for machine learning on graphs. I'm also writing tutorials on [zhihu.com](https://www.zhihu.com/people/miao-si-qi/columns) and they're in Chinese.
 
 # 2. Requirements
 I use basic packages from Anaconda3 with Python 3.8.5. To make my life easier, I also use the following packages to implement models. Please see `requirements.txt` for the full list.
