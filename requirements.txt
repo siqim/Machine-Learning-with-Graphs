@@ -1,6 +1,6 @@
-torch==1.7.0
+torch==1.7.1
 torch_geometric==1.6.3
-ogb==1.2.4
+ogb==1.2.5
 scipy==1.5.2
 scikit-multilearn==0.2.0
 scikit-learn==0.23.2
@@ -8,4 +8,4 @@ pathlib2==2.3.5
 numpy==1.19.2
 numba==0.51.2
 tqdm==4.50.2
-torchvision==0.8.1
+torchvision==0.8.2
