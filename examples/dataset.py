@@ -171,4 +171,4 @@ class Dataset(object):
 
 
 if __name__ == '__main__':
-    data = Dataset(root=Path('../dataset'), name='actor', make_edge_index=True)
+    data = Dataset(root=Path('../dataset'), name='ogb', make_edge_index=True)
